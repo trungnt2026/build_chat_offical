@@ -13,7 +13,7 @@ public class Client {
 		try {
 			
 			Socket socket = new Socket("localhost", 5000);
-			System.out.println("Da ket noi toi Server");
+			System.out.println("Da ket noi toi Server!");
 			
 			PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
 						
@@ -29,8 +29,7 @@ public class Client {
 			output.println(message);
 			
 			String reply = input.readLine();
-			System.out.println("Server gui: " + reply);
-			
+			System.out.println("Server: " + reply);
 			
 		}catch (Exception e) {
 			e.printStackTrace();
