@@ -23,13 +23,23 @@ public class Client {
 			
 			Scanner scanner = new Scanner(System.in);
 			
-			System.out.println("Nhap tin nhan: ");
-			String message = scanner.nextLine();
+			while (true) {
+				System.out.println("Nhap tin nhan: ");
+				String message = scanner.nextLine();
+				
+				output.println(message);
+				
+				String reply = input.readLine();
+				System.out.println("Server gui: " + reply);
+				
+				if (message.equalsIgnoreCase("/exit")) {
+					break;
+				}
+			}
 			
-			output.println(message);
+			socket.close();
+			scanner.close();
 			
-			String reply = input.readLine();
-			System.out.println("Server gui: " + reply);
 			
 		}catch (Exception e) {
 			e.printStackTrace();

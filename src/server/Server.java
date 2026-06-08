@@ -14,21 +14,37 @@ public class Server {
 				System.out.println("Server da khoi dong tai cong 5000");
 				
 				Socket client = server.accept();
-				
 				System.out.println("da co Client ket noi");
 				
 				BufferedReader input = new BufferedReader (
 						new InputStreamReader (client.getInputStream())
-						);
+				);
 				
-				PrintWriter output = new PrintWriter (
-						client.getOutputStream(), true);
+				PrintWriter output = new PrintWriter (client.getOutputStream(), true);
 				
-				String message = input.readLine();
+				String message;
 				
-				System.out.println("Client gui: " + message);
+				while (true) {
+					message = input.readLine();
+					
+					if (message == null) {
+						System.out.println("Client da ngat ket noi");
+						break;
+					}
+					
+					if (message.equalsIgnoreCase("/exit")) {
+						System.out.println("Client da thoat");
+						output.println("Server: Tam biet!");
+						break;
+					}
+					
+					System.out.println("Client gui: " + message);
+					output.println("Server da nhan: " + message);
+				}
 				
-				output.println("Server da nhan duoc tin nhan cua ban");
+				client.close();
+				server.close();
+				
 				
 			} catch (Exception e) {
 				e.printStackTrace();
