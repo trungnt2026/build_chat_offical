@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Server {
 	
@@ -14,37 +15,58 @@ public class Server {
 				System.out.println("Server da khoi dong tai cong 5000");
 				
 				Socket client = server.accept();
-				System.out.println("da co Client ket noi");
+				System.out.println("Da co Client ket noi");
 				
 				BufferedReader input = new BufferedReader (
 						new InputStreamReader (client.getInputStream())
-				);
+						);
 				
 				PrintWriter output = new PrintWriter (client.getOutputStream(), true);
 				
-				String message;
+				Scanner scanner = new Scanner(System.in);
+
+				//Thread nhan tin tu client
 				
-				while (true) {
-					message = input.readLine();
-					
-					if (message == null) {
-						System.out.println("Client da ngat ket noi");
-						break;
+				Thread receiveThread = new Thread(() -> {
+					try {
+						String clientMessage;
+						
+						while ((clientMessage = input.readLine()) != null) {
+							if (clientMessage.equalsIgnoreCase("/exit")) {
+								System.out.println("Client da thoat");
+								break;
+							}
+							
+							System.out.println("Client gui: " + clientMessage);
+						}	
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
+				
+				//Thread gui tin cho Client
+				Thread sendThread = new Thread (() -> {
+					try {
+						while (true) {
+							String serverMessage = scanner.nextLine();
+							
+							output.println(serverMessage);
+							
+							if (serverMessage.equalsIgnoreCase("/exit")) {
+								System.out.println("Server da thoat");
+								break;
+							}
+						}
+					}catch (Exception e) {
+						e.printStackTrace();
 					}
 					
-					if (message.equalsIgnoreCase("/exit")) {
-						System.out.println("Client da thoat");
-						output.println("Server: Tam biet!");
-						break;
-					}
-					
-					System.out.println("Client gui: " + message);
-					output.println("Server da nhan: " + message);
 				}
+						
+						);
 				
-				client.close();
-				server.close();
-				
+				receiveThread.start();
+				sendThread.start();
 				
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -23,22 +23,53 @@ public class Client {
 			
 			Scanner scanner = new Scanner(System.in);
 			
-			while (true) {
-				System.out.println("Nhap tin nhan: ");
-				String message = scanner.nextLine();
-				
-				output.println(message);
-				
-				String reply = input.readLine();
-				System.out.println("Server gui: " + reply);
-				
-				if (message.equalsIgnoreCase("/exit")) {
-					break;
+			//Thread nhan tin tu Server
+			Thread receiveThread = new Thread (() -> {
+				try {
+					String serverMessage;
+					
+					while ((serverMessage = input.readLine()) != null) {
+						if (serverMessage.equalsIgnoreCase("/exit")) {
+							System.out.println("Server da thoat");
+							break;
+						}
+						
+						System.out.println("Server gui: " + serverMessage);
+						
+					}
+				}catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
+					
+					);
 			
-			socket.close();
-			scanner.close();
+			//Thread gui tin cho Server
+			Thread sendThread = new Thread(() -> {
+				try {
+					while (true) {
+						String clientMessage = scanner.nextLine();
+						
+						output.println(clientMessage);
+						
+						if (clientMessage.equalsIgnoreCase("/exit")) {
+							System.out.println("Client da thoat");
+							break;
+						}
+						
+					}
+					
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			}
+					
+					);
+			
+			
+			receiveThread.start();
+			sendThread.start();
 			
 			
 		}catch (Exception e) {
