@@ -23,6 +23,10 @@ public class Client {
 			
 			Scanner scanner = new Scanner(System.in);
 			
+			System.out.print("Nhap ten cua ban: ");
+			String name = scanner.nextLine();
+			output.println(name);
+			
 			//Thread nhan tin tu Server
 			Thread receiveThread = new Thread (() -> {
 				try {
@@ -34,7 +38,7 @@ public class Client {
 							break;
 						}
 						
-						System.out.println("Server gui: " + serverMessage);
+						System.out.println(serverMessage);
 						
 					}
 				}catch (Exception e) {
@@ -53,7 +57,7 @@ public class Client {
 						output.println(clientMessage);
 						
 						if (clientMessage.equalsIgnoreCase("/exit")) {
-							System.out.println("Client da thoat");
+							System.out.println(name + " da thoat");
 							break;
 						}
 						

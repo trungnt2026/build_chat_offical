@@ -1,75 +1,44 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Server {
 	
-		public static void main (String[] args) {
-			try {
-				ServerSocket server = new ServerSocket(5000);
-				System.out.println("Server da khoi dong tai cong 5000");
+	public static ArrayList<ClientHandler> clients = new ArrayList<>();
+	
+	public static void main (String[] args) {
+		
+		try {
+			ServerSocket server = new ServerSocket(5000);
+			System.out.println("Server da khoi dong tai cong 5000");
+			
+			while (true) {
 				
 				Socket client = server.accept();
-				System.out.println("Da co Client ket noi");
 				
-				BufferedReader input = new BufferedReader (
-						new InputStreamReader (client.getInputStream())
-						);
+				ClientHandler handler = new ClientHandler(client);
 				
-				PrintWriter output = new PrintWriter (client.getOutputStream(), true);
+				clients.add(handler);
 				
-				Scanner scanner = new Scanner(System.in);
-
-				//Thread nhan tin tu client
+				handler.start();
+			}
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void broadcast(String message, ClientHandler sender) {
+		for (ClientHandler client : clients) {
+			if (client != sender) {
+				client.sendMessage(message);
 				
-				Thread receiveThread = new Thread(() -> {
-					try {
-						String clientMessage;
-						
-						while ((clientMessage = input.readLine()) != null) {
-							if (clientMessage.equalsIgnoreCase("/exit")) {
-								System.out.println("Client da thoat");
-								break;
-							}
-							
-							System.out.println("Client gui: " + clientMessage);
-						}	
-					}catch (Exception e) {
-						e.printStackTrace();
-					}
-				});
-				
-				//Thread gui tin cho Client
-				Thread sendThread = new Thread (() -> {
-					try {
-						while (true) {
-							String serverMessage = scanner.nextLine();
-							
-							output.println(serverMessage);
-							
-							if (serverMessage.equalsIgnoreCase("/exit")) {
-								System.out.println("Server da thoat");
-								break;
-							}
-						}
-					}catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-				}
-						
-						);
-				
-				receiveThread.start();
-				sendThread.start();
-				
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
+	}
+	
 }
