@@ -23,7 +23,9 @@ public class ClientHandler extends Thread {
 					new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8)
 					);
 			
-			output = new PrintWriter(client.getOutputStream(), true);
+			output = new PrintWriter (
+					new java.io.OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8), true
+					);
 			
 			name = input.readLine();
 			

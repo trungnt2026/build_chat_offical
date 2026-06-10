@@ -24,7 +24,7 @@ public class Client {
 					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)
 					);
 			
-			Scanner scanner = new Scanner(System.in);
+			Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
 			
 			System.out.print("Nhap ten cua ban: ");
 			String name = scanner.nextLine();
