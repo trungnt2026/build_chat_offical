@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class ClientHandler extends Thread {
 
@@ -19,7 +20,7 @@ public class ClientHandler extends Thread {
 	public void run () {
 		try {
 			BufferedReader input = new BufferedReader (
-					new InputStreamReader(client.getInputStream())
+					new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8)
 					);
 			
 			output = new PrintWriter(client.getOutputStream(), true);

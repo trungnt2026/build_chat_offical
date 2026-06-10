@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 
 public class Client {
 	
@@ -15,10 +16,12 @@ public class Client {
 			Socket socket = new Socket("localhost", 5000);
 			System.out.println("Da ket noi toi Server");
 			
-			PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-						
+			PrintWriter output = new PrintWriter (
+					new java.io.OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true
+					);			
+			
 			BufferedReader input = new BufferedReader (
-					new InputStreamReader(socket.getInputStream())
+					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)
 					);
 			
 			Scanner scanner = new Scanner(System.in);
