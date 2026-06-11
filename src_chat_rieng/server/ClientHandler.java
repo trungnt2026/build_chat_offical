@@ -30,6 +30,8 @@ public class ClientHandler extends Thread {
 			name = input.readLine();
 			
 			System.out.println(name + " da ket noi");
+			
+			Server.notifyUserOnline(this);
 		
 			String message;
 			
@@ -38,6 +40,11 @@ public class ClientHandler extends Thread {
 				if (message.equalsIgnoreCase("/exit")) {
 					System.out.println(name + " da thoat");
 					break;
+				}
+				
+				if (message.equalsIgnoreCase("/online")) {
+					sendMessage(Server.getOnlineUsers());
+					continue;
 				}
 				
 				if (message.startsWith("/pm ")) {

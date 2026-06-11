@@ -57,4 +57,22 @@ public class Server {
 		sender.sendMessage("Khong tim thay nguoi dung: " + receiver);
 	}
 	
+	public static String getOnlineUsers() {
+		String result = "Nguoi dang online:\n";
+		
+		for (ClientHandler client : clients) {
+			result += "- " + client.getClientName() + "\n";
+		}
+		return result;
+	}
+	
+	public static void notifyUserOnline(ClientHandler newClient) {
+		for (ClientHandler client : clients) {
+			if (client != newClient) {
+				client.sendMessage("[Thong bao] " + newClient.getClientName() + " da online");
+			}
+			
+		}
+	}
+	
 }
