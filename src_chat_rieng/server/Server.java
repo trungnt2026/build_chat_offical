@@ -41,4 +41,20 @@ public class Server {
 		}
 	}
 	
+	public static void privateMessage(String receiver, String message, ClientHandler sender) {
+		
+		for (ClientHandler client : clients) {
+			
+			if (client.getClientName().equalsIgnoreCase(receiver)) {
+				client.sendMessage("[Private] " + sender.getClientName() + ": " + message);
+				
+				sender.sendMessage("[Private to " + receiver + "]" + message);
+				
+				return;
+			}
+		}
+		
+		sender.sendMessage("Khong tim thay nguoi dung: " + receiver);
+	}
+	
 }

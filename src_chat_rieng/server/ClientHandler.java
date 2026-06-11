@@ -40,20 +40,44 @@ public class ClientHandler extends Thread {
 					break;
 				}
 				
-				System.out.println(name + ": " + message);
+				if (message.startsWith("/pm ")) {
+					
+					String[] parts = message.split(" ", 3);
+					
+					if (parts.length == 3) {
+						String receiver = parts[1];
+						String content = parts[2];
+						
+						Server.privateMessage(receiver, content, this);
+						
+					} else {
+						sendMessage("Sai cu phap. Dung: /pm ten nguoi_nhan noi_dung");
+					}
+					
+				} else {
+					
+					System.out.println(name + ": " + message);
+					
+					Server.broadcast(name + ": " + message, this);
+				}
 				
-				Server.broadcast(name + ": " + message, this);
-				
-			}
+			  }	
+			
 			client.close();
 			Server.clients.remove(this);
 			
-		}catch (Exception e) {
+			} catch (Exception e) {
 			e.printStackTrace();
 		}
+	
 	}
 	
 	public void sendMessage(String message) {
 		output.println(message);
 	}
+	
+	public String getClientName() {
+		return name;
+	}
+	
 }
