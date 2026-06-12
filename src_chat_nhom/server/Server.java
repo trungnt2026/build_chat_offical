@@ -96,6 +96,8 @@ public class Server {
 		groups.put(groupName, members);
 		
 		creator.sendMessage("Da tao nhom " + groupName);
+		
+		System.out.println(creator.getClientName() + " da tao nhom " + groupName);
 	}
 	
 	public static void joinGroup(String groupName, ClientHandler client) {
@@ -107,7 +109,7 @@ public class Server {
 			return;
 		}
 		
-		if (member.contains(client)) {
+		if (members.contains(client)) {
 			client.sendMessage("Ban da o trong nhom " + groupName);
 			return;
 		}
@@ -116,4 +118,44 @@ public class Server {
 		
 		client.sendMessage("Da tham gia nhom " + groupName);
 	}
+
+	public static void inviteToGroup(String userName, 
+									String groupName,
+									ClientHandler sender) {
+		ArrayList<ClientHandler> members = groups.get(groupName);
+		
+		if (members == null) {
+			sender.sendMessage("Khong tim thay nhom: " + groupName);
+			return;
+		}
+		
+		if (!members.contains(sender)) {
+			sender.sendMessage("Ban khong thuoc nhom " + groupName);
+			return;
+		}
+		
+		for (ClientHandler client : clients) {
+			if (client.getClientName().equalsIgnoreCase(userName)) {
+				if (members.contains(client)) {
+					sender.sendMessage(
+							userName + " da o trong nhom " + groupName);
+					return;
+				}
+				
+				members.add(client);
+				client.sendMessage("[Moi nhom] " 
+									+ sender.getClientName()
+									+ " da moi ban vao nhom "
+									+ groupName);
+				
+				sender.sendMessage("Da them " + userName + " vao nhom " + groupName);
+					
+				return;
+			}
+		}
+		
+		sender.sendMessage("Khong tim thay nguoi dung: " + userName);
+	}
+	
 }
+	

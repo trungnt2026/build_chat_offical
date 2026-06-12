@@ -103,6 +103,23 @@ public class ClientHandler extends Thread {
 					continue;
 				}
 				
+				if (message.startsWith("/invite")) {
+					
+					String [] parts = message.split(" ", 3);
+					
+					if (parts.length == 3) {
+						
+						String userName = parts[1];
+						
+						String groupName = parts[2];
+						
+						Server.inviteToGroup(userName, groupName, this);
+					} else {
+						sendMessage("Sai cu phap! Dung: /invite ten_nguoi_dung ten_nhom");
+					}
+					continue;
+				}
+				
  				if (message.startsWith("/pm ")) {
 					
 					String[] parts = message.split(" ", 3);
