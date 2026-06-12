@@ -47,6 +47,23 @@ public class ClientHandler extends Thread {
 					continue;
 				}
 				
+				if (message.startsWith("/rename")) {
+					
+					String newName = message.substring(8);
+					
+					String oldName = name;
+					
+					name = newName;
+					
+					System.out.println(oldName + " da doi ten thanh: " + newName);
+					
+					Server.broadcast("[Thong bao] " + oldName + " da doi ten thanh: " + newName, this);
+					
+					sendMessage("Ban da doi ten thanh: " + newName);
+					
+					continue;
+				}
+				
 				if (message.startsWith("/pm ")) {
 					
 					String[] parts = message.split(" ", 3);
@@ -60,6 +77,7 @@ public class ClientHandler extends Thread {
 					} else {
 						sendMessage("Sai cu phap. Dung: /pm ten nguoi_nhan noi_dung");
 					}
+				
 					
 				} else {
 					
@@ -67,13 +85,14 @@ public class ClientHandler extends Thread {
 					
 					Server.broadcast(name + ": " + message, this);
 				}
-				
-			  }	
+			}
 			
 			client.close();
 			Server.clients.remove(this);
+			Server.broadcast("[Thong bao] " + name + " da offline", this);
 			
-			} catch (Exception e) {
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	

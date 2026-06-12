@@ -61,7 +61,9 @@ public class Server {
 		String result = "Nguoi dang online:\n";
 		
 		for (ClientHandler client : clients) {
-			result += "- " + client.getClientName() + "\n";
+			if (client.getClientName() != null) {
+				result += "- " + client.getClientName() + "\n";
+			}
 		}
 		return result;
 	}
