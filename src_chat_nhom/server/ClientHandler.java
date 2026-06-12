@@ -49,22 +49,61 @@ public class ClientHandler extends Thread {
 				
 				if (message.startsWith("/rename")) {
 					
-					String newName = message.substring(8);
+					String[] parts = message.split(" ", 2);
 					
-					String oldName = name;
+					if (parts.length == 2) {
+						
+						String newName = parts[1];
+						
+						String oldName = name;
+						
+						name = newName;
+						
+						System.out.println(oldName + " da doi ten thanh: " + newName);
+						
+						Server.broadcast ("[Thong bao]" + oldName + " da doi ten thanh: " + newName, this);
 					
-					name = newName;
+						sendMessage("Ban da doi ten thanh: " + newName);
 					
-					System.out.println(oldName + " da doi ten thanh: " + newName);
+					} else {
+						sendMessage("Sai cu phap! Dung: /rename ten_moi");
+					}
 					
-					Server.broadcast("[Thong bao] " + oldName + " da doi ten thanh: " + newName, this);
+					continue;
 					
-					sendMessage("Ban da doi ten thanh: " + newName);
+				}
+				
+				if (message.startsWith("/creategroup")) {
+					
+					String[] parts = message.split(" ", 2);
+					
+					if (parts.length == 2) {
+						
+						String groupName = parts[1];
+						
+						Server.createGroup(groupName, this);
+					} else {
+						sendMessage("Sai cu phap! Dung: /creategroup ten_nhom");
+					}
 					
 					continue;
 				}
 				
-				if (message.startsWith("/pm ")) {
+				if (message.startsWith("/join")) {
+					
+					String[] parts = message.split(" ", 2);
+					
+					if (parts.length == 2) {
+						String groupName = parts[1];
+						
+						Server.joinGroup(groupName, this);
+					} else {
+						sendMessage("Sai cu phap! Dung: /join ten_nhom");
+					}
+					continue;
+				}
+				
+ 				if (message.startsWith("/pm ")) {
 					
 					String[] parts = message.split(" ", 3);
 					
@@ -75,7 +114,7 @@ public class ClientHandler extends Thread {
 						Server.privateMessage(receiver, content, this);
 						
 					} else {
-						sendMessage("Sai cu phap. Dung: /pm ten nguoi_nhan noi_dung");
+						sendMessage("Sai cu phap! Dung: /pm ten nguoi_nhan noi_dung");
 					}
 				
 					

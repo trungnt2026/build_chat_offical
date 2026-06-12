@@ -3,10 +3,13 @@ package server;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class Server {
 	
 	public static ArrayList<ClientHandler> clients = new ArrayList<>();
+	public static HashMap<String, ArrayList<ClientHandler>> groups = new HashMap<>();
 	
 	public static void main (String[] args) {
 		
@@ -77,4 +80,40 @@ public class Server {
 		}
 	}
 	
+	public static void createGroup(String groupName, ClientHandler creator) {
+		
+		if (groups.containsKey(groupName)) {
+			
+			creator.sendMessage("Nhom da ton tai");
+			
+			return;
+		}
+		
+		ArrayList<ClientHandler> members = new ArrayList<ClientHandler>();
+		
+		members.add(creator);
+		
+		groups.put(groupName, members);
+		
+		creator.sendMessage("Da tao nhom " + groupName);
+	}
+	
+	public static void joinGroup(String groupName, ClientHandler client) {
+		
+		ArrayList<ClientHandler> members = groups.get(groupName);
+		
+		if (members == null) {
+			client.sendMessage("Khong tim thay nhom: " + groupName);
+			return;
+		}
+		
+		if (member.contains(client)) {
+			client.sendMessage("Ban da o trong nhom " + groupName);
+			return;
+		}
+		 
+		members.add(client);
+		
+		client.sendMessage("Da tham gia nhom " + groupName);
+	}
 }
