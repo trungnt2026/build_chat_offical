@@ -11,155 +11,185 @@ public class ClientHandler extends Thread {
 	private Socket client;
 	private PrintWriter output;
 	private String name;
-	
-	public ClientHandler (Socket client) {
+
+	public ClientHandler(Socket client) {
 		this.client = client;
 	}
-	
+
 	@Override
-	public void run () {
+	public void run() {
 		try {
-			BufferedReader input = new BufferedReader (
-					new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8)
-					);
-			
-			output = new PrintWriter (
-					new java.io.OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8), true
-					);
-			
-			name = input.readLine();
+			BufferedReader input = new BufferedReader(
+					new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
+
+			output = new PrintWriter(new java.io.OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8),
+					true);
+
+			String inputName = input.readLine();
+			name = (inputName != null) ? inputName.trim() : ""; //tránh user gõ dư dấu cách
 			
 			System.out.println(name + " da ket noi");
-			
+
 			Server.notifyUserOnline(this);
-		
+
 			String message;
-			
+
 			while ((message = input.readLine()) != null) {
-				
+
 				if (message.equalsIgnoreCase("/exit")) {
 					System.out.println(name + " da thoat");
 					break;
 				}
-				
+
 				if (message.equalsIgnoreCase("/online")) {
 					sendMessage(Server.getOnlineUsers());
 					continue;
 				}
-				
+
 				if (message.startsWith("/rename")) {
-					
+
 					String[] parts = message.split(" ", 2);
-					
+
 					if (parts.length == 2) {
-						
+
 						String newName = parts[1];
-						
+
 						String oldName = name;
-						
+
 						name = newName;
-						
+
 						System.out.println(oldName + " da doi ten thanh: " + newName);
-						
-						Server.broadcast ("[Thong bao]" + oldName + " da doi ten thanh: " + newName, this);
-					
+
+						Server.broadcast("[Thong bao] " + oldName + " da doi ten thanh: " + newName, this);
+
 						sendMessage("Ban da doi ten thanh: " + newName);
-					
+
 					} else {
 						sendMessage("Sai cu phap! Dung: /rename ten_moi");
 					}
-					
+
 					continue;
-					
+
 				}
-				
+
 				if (message.startsWith("/creategroup")) {
-					
+
 					String[] parts = message.split(" ", 2);
-					
+
 					if (parts.length == 2) {
-						
+
 						String groupName = parts[1];
-						
+
 						Server.createGroup(groupName, this);
 					} else {
 						sendMessage("Sai cu phap! Dung: /creategroup ten_nhom");
 					}
-					
+
 					continue;
 				}
-				
+
 				if (message.startsWith("/join")) {
-					
+
 					String[] parts = message.split(" ", 2);
-					
+
 					if (parts.length == 2) {
 						String groupName = parts[1];
-						
+
 						Server.joinGroup(groupName, this);
 					} else {
 						sendMessage("Sai cu phap! Dung: /join ten_nhom");
 					}
 					continue;
 				}
-				
+
 				if (message.startsWith("/invite")) {
-					
-					String [] parts = message.split(" ", 3);
-					
+
+					String[] parts = message.split(" ", 3);
+
 					if (parts.length == 3) {
-						
-						String userName = parts[1];
-						
-						String groupName = parts[2];
-						
+
+						String userName = parts[1].trim();
+
+						String groupName = parts[2].trim();
+
 						Server.inviteToGroup(userName, groupName, this);
 					} else {
 						sendMessage("Sai cu phap! Dung: /invite ten_nguoi_dung ten_nhom");
 					}
 					continue;
 				}
-				
- 				if (message.startsWith("/pm ")) {
-					
+
+				if (message.startsWith("/group")) {
+
 					String[] parts = message.split(" ", 3);
-					
+
+					if (parts.length == 3) {
+
+						try {
+
+							int groupId = Integer.parseInt(parts[1]);
+
+							String content = parts[2];
+
+							Server.groupMessageById(groupId, content, this);
+						} catch (NumberFormatException e) {
+							sendMessage("Id nhom phai la so");
+						}
+					} else {
+						sendMessage("Sai cu phap! Dung: /group id_nhom noi_dung");
+					}
+					continue;
+				}
+
+				if (message.equalsIgnoreCase("/groups")) {
+
+					sendMessage(Server.getGroups());
+
+					continue;
+				}
+
+				if (message.startsWith("/pm ")) {
+
+					String[] parts = message.split(" ", 3);
+
 					if (parts.length == 3) {
 						String receiver = parts[1];
 						String content = parts[2];
-						
+
 						Server.privateMessage(receiver, content, this);
-						
+
 					} else {
 						sendMessage("Sai cu phap! Dung: /pm ten nguoi_nhan noi_dung");
 					}
-				
-					
+					continue;
+
 				} else {
-					
-					System.out.println(name + ": " + message);
-					
-					Server.broadcast(name + ": " + message, this);
+					if (message.startsWith("/")) {
+						sendMessage("[He thong] Lenh khong hop le hoa sai cu phap. Vui long kiem tra lai!");
+					} else {
+
+						System.out.println(name + ": " + message);
+
+						Server.broadcast(name + ": " + message, this);
+					}
 				}
 			}
-			
 			client.close();
 			Server.clients.remove(this);
 			Server.broadcast("[Thong bao] " + name + " da offline", this);
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+
 	}
-	
+
 	public void sendMessage(String message) {
 		output.println(message);
 	}
-	
+
 	public String getClientName() {
 		return name;
 	}
-	
+
 }

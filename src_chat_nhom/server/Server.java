@@ -10,6 +10,9 @@ public class Server {
 	
 	public static ArrayList<ClientHandler> clients = new ArrayList<>();
 	public static HashMap<String, ArrayList<ClientHandler>> groups = new HashMap<>();
+	public static int nextGroupId = 1;
+	public static HashMap<Integer, String> groupIds = new HashMap<>();
+	
 	
 	public static void main (String[] args) {
 		
@@ -48,7 +51,7 @@ public class Server {
 		
 		for (ClientHandler client : clients) {
 			
-			if (client.getClientName().equalsIgnoreCase(receiver)) {
+			if (client.getClientName() == null && client.getClientName().equalsIgnoreCase(receiver)) {
 				client.sendMessage("[Private] " + sender.getClientName() + ": " + message);
 				
 				sender.sendMessage("[Private to " + receiver + "]" + message);
@@ -81,23 +84,36 @@ public class Server {
 	}
 	
 	public static void createGroup(String groupName, ClientHandler creator) {
-		
+		// kiểm trùng nhóm
 		if (groups.containsKey(groupName)) {
-			
-			creator.sendMessage("Nhom da ton tai");
-			
+			creator.sendMessage("Nhom " + groupName + " da ton tai roi!");
 			return;
 		}
 		
+		//nếu nhóm chưa có, cấp ID
+		int id = nextGroupId++;
+		groupIds.put(id, groupName);
+		
+		// khởi tạo list mem và lưu group
 		ArrayList<ClientHandler> members = new ArrayList<ClientHandler>();
-		
 		members.add(creator);
-		
 		groups.put(groupName, members);
 		
-		creator.sendMessage("Da tao nhom " + groupName);
+		//notice về Client và Ser
+		creator.sendMessage("[He thong]: Ban da tao nhom [" + id + "]: " + groupName + " thanh cong!");
+		System.out.println(creator.getClientName() + " da tao nhom [" + id + "] " + groupName());
 		
-		System.out.println(creator.getClientName() + " da tao nhom " + groupName);
+	}
+	
+	public static String getGroups() {
+		
+		String result = "Danh sach nhom:\n";
+		
+		for (Integer id : groupIds.keySet()) {
+			
+			result += "[" + id + "] " + groupIds.get(id) + "\n";
+		}
+		return result;
 	}
 	
 	public static void joinGroup(String groupName, ClientHandler client) {
@@ -135,7 +151,7 @@ public class Server {
 		}
 		
 		for (ClientHandler client : clients) {
-			if (client.getClientName().equalsIgnoreCase(userName)) {
+			if (client.getClientName() == null && client.getClientName().equalsIgnoreCase(userName)) {
 				if (members.contains(client)) {
 					sender.sendMessage(
 							userName + " da o trong nhom " + groupName);
@@ -155,6 +171,42 @@ public class Server {
 		}
 		
 		sender.sendMessage("Khong tim thay nguoi dung: " + userName);
+	}
+	
+	//gửi tin nhắn bằng ID
+	public static void groupMessageById(int id, String message, ClientHandler sender) {
+		
+		String groupName = groupIds.get(id);
+		
+		if (groupName == null) {
+			
+			sender.sendMessage("Khong tim thay nhom ID: " + id);
+			
+			return;
+		}
+		
+		groupMessage(groupName, message, sender);
+		}
+	
+	public static void groupMessage(String groupName, String message, ClientHandler sender) {
+		
+		ArrayList<ClientHandler> members = groups.get(groupName);
+		
+		if (members == null) {
+			sender.sendMessage("Ban khong thuoc nhom " + groupName);
+			return;
+		}
+		
+		for (ClientHandler member : members) {
+			
+			if (member != sender) {
+				
+				member.sendMessage("[" + groupName + "]"
+									+ sender.getClientName()
+									+ ": "
+									+ message);
+			}
+		}
 	}
 	
 }
