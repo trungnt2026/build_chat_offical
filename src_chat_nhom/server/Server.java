@@ -101,7 +101,7 @@ public class Server {
 		
 		//notice về Client và Ser
 		creator.sendMessage("[He thong]: Ban da tao nhom [" + id + "]: " + groupName + " thanh cong!");
-		System.out.println(creator.getClientName() + " da tao nhom [" + id + "] " + groupName());
+		System.out.println(creator.getClientName() + " da tao nhom [" + id + "] " + groupName);
 		
 	}
 	
