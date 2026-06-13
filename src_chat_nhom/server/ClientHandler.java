@@ -52,7 +52,7 @@ public class ClientHandler extends Thread {
 
 					if (parts.length == 2) {
 
-						String newName = parts[1];
+						String newName = parts[1].trim();
 
 						String oldName = name;
 
@@ -78,7 +78,7 @@ public class ClientHandler extends Thread {
 
 					if (parts.length == 2) {
 
-						String groupName = parts[1];
+						String groupName = parts[1].trim();
 
 						Server.createGroup(groupName, this);
 					} else {
@@ -93,7 +93,7 @@ public class ClientHandler extends Thread {
 					String[] parts = message.split(" ", 2);
 
 					if (parts.length == 2) {
-						String groupName = parts[1];
+						String groupName = parts[1].trim();
 
 						Server.joinGroup(groupName, this);
 					} else {
@@ -129,7 +129,7 @@ public class ClientHandler extends Thread {
 
 							int groupId = Integer.parseInt(parts[1]);
 
-							String content = parts[2];
+							String content = parts[2].trim();
 
 							Server.groupMessageById(groupId, content, this);
 						} catch (NumberFormatException e) {
@@ -153,19 +153,19 @@ public class ClientHandler extends Thread {
 					String[] parts = message.split(" ", 3);
 
 					if (parts.length == 3) {
-						String receiver = parts[1];
-						String content = parts[2];
+						String receiver = parts[1].trim();
+						String content = parts[2].trim();
 
 						Server.privateMessage(receiver, content, this);
 
 					} else {
 						sendMessage("Sai cu phap! Dung: /pm ten nguoi_nhan noi_dung");
 					}
-					continue;
-
-				} else {
-					if (message.startsWith("/")) {
-						sendMessage("[He thong] Lenh khong hop le hoa sai cu phap. Vui long kiem tra lai!");
+					continue;	
+				} 
+				
+				if (message.startsWith("/")) {
+						sendMessage("[He thong] Lenh khong hop le hoac sai cu phap. Vui long kiem tra lai!");
 					} else {
 
 						System.out.println(name + ": " + message);
@@ -173,10 +173,11 @@ public class ClientHandler extends Thread {
 						Server.broadcast(name + ": " + message, this);
 					}
 				}
-			}
-			client.close();
+			
+			Server.broadcast("[Thong bao]: " + name + " da offline", this);
 			Server.clients.remove(this);
-			Server.broadcast("[Thong bao] " + name + " da offline", this);
+			client.close();
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
