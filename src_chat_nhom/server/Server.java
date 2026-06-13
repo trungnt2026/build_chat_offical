@@ -38,6 +38,18 @@ public class Server {
 		
 	}
 	
+	public static boolean isNameExists(String name) {
+		
+		for (ClientHandler client : clients) {
+			
+			if (client.getClientName() != null 
+					&& client.getClientName().equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static void broadcast(String message, ClientHandler sender) {
 		for (ClientHandler client : clients) {
 			if (client != sender) {
@@ -51,7 +63,7 @@ public class Server {
 		
 		for (ClientHandler client : clients) {
 			
-			if (client.getClientName() == null && client.getClientName().equalsIgnoreCase(receiver)) {
+			if (client.getClientName() != null && client.getClientName().equalsIgnoreCase(receiver)) {
 				client.sendMessage("[Private] " + sender.getClientName() + ": " + message);
 				
 				sender.sendMessage("[Private to " + receiver + "]" + message);
@@ -109,7 +121,7 @@ public class Server {
 		
 		String result = "Danh sach nhom:\n";
 		
-		for (Integer id : groupIds.keySet()) {
+		for (Integer id : new TreeSet<>(groupIds.keySet())) {
 			
 			result += "[" + id + "] " + groupIds.get(id) + "\n";
 		}
@@ -150,8 +162,19 @@ public class Server {
 			return;
 		}
 		
+		System.out.println("=== Danh sach user ===");
+		
 		for (ClientHandler client : clients) {
-			if (client.getClientName() == null && client.getClientName().equalsIgnoreCase(userName)) {
+			System.out.println(client.getClientName());
+		}
+		
+		
+		for (ClientHandler client : clients) {
+			
+			System.out.println("Dang tim: " + userName + " | Dang xet: " + client.getClientName());
+
+			
+			if (client.getClientName() != null && client.getClientName().equalsIgnoreCase(userName)) {
 				if (members.contains(client)) {
 					sender.sendMessage(
 							userName + " da o trong nhom " + groupName);
@@ -193,7 +216,12 @@ public class Server {
 		ArrayList<ClientHandler> members = groups.get(groupName);
 		
 		if (members == null) {
-			sender.sendMessage("Ban khong thuoc nhom " + groupName);
+			sender.sendMessage("Khong tim thay nhom " + groupName);
+			return;
+		}
+		
+		if (!members.contains(sender)) {
+			sender.sendMessage("Ban khong thuoc nhom" + groupName);
 			return;
 		}
 		

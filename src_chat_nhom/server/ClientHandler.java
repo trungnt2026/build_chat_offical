@@ -53,9 +53,20 @@ public class ClientHandler extends Thread {
 					if (parts.length == 2) {
 
 						String newName = parts[1].trim();
-
+						
+						if (newName.isEmpty()) {
+							sendMessage("Ten khong duoc de trong! Vui long nhap ten khac.");
+							continue;
+						}
+						
+						if (Server.isNameExits(newName)) {
+							
+							sendMessage("Ten da ton tai, vui long chon ten khac!");
+							continue;
+						}
+						
 						String oldName = name;
-
+						
 						name = newName;
 
 						System.out.println(oldName + " da doi ten thanh: " + newName);
@@ -174,13 +185,20 @@ public class ClientHandler extends Thread {
 					}
 				}
 			
-			Server.broadcast("[Thong bao]: " + name + " da offline", this);
-			Server.clients.remove(this);
-			client.close();
-			
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(name + " mat ket noi");
+		} finally {
+			
+			Server.clients.remove(this);
+			
+			Server.broadcast(
+					"[Thong bao]: " + name + " da offline", this);
+			
+			try {
+				client.close();
+			} catch (Exception ex) {
+				
+			}
 		}
 
 	}
