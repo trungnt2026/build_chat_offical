@@ -59,7 +59,7 @@ public class ClientHandler extends Thread {
 							continue;
 						}
 						
-						if (Server.isNameExits(newName)) {
+						if (Server.isNameExists(newName)) {
 							
 							sendMessage("Ten da ton tai, vui long chon ten khac!");
 							continue;
