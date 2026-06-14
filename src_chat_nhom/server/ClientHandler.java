@@ -158,7 +158,7 @@ public class ClientHandler extends Thread {
 
 					continue;
 				}
-
+				
 				if (message.startsWith("/pm ")) {
 
 					String[] parts = message.split(" ", 3);
@@ -175,8 +175,43 @@ public class ClientHandler extends Thread {
 					continue;	
 				} 
 				
+				if (message.equals("/help")) {
+					sendMessage(
+							"===============List==============\n"
+							+ "'/rename ten_moi'\n"
+							+ "   -> Doi ten moi.\n\n"
+							
+							+ "/pm ten_nguoi_nhan noi_dung\n"
+							+ "   -> Gui tin nhan rieng.\n\n"
+									
+							+ "/creategroup ten_nhom\n"
+							+ "   -> Tao nhom chat moi.\n\n"
+							
+                            + "'/groups'\n"
+                            + "   -> Xem danh sach nhom.\n\n"
+                            
+							+ "/invite ten_nguoi_nhan ten_nhom\n"
+							+ "   -> Moi mot nguoi vao nhom.\n\n"
+
+							+ "/group id_nhom noi_dung\n"
+							+ "   -> Gui tin nhan vao nhom.\n\n"
+
+							+ "'/exit'\n"
+							+ "   -> Thoat khoi he thong.\n\n"
+							
+							+ "'/help'\n"
+							+ "   -> Xem danh sach lenh.\n\n"
+							
+							+ "=============================="
+					);
+					continue;	
+				}
+				
+				message = message.trim();
 				if (message.startsWith("/")) {
-						sendMessage("[He thong] Lenh khong hop le hoac sai cu phap. Vui long kiem tra lai!");
+						sendMessage("[He thong] Lenh khong hop le hoac sai cu phap. Go /help de xem danh sach lenh.");
+						
+						
 					} else {
 
 						System.out.println(name + ": " + message);
