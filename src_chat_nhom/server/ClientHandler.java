@@ -211,6 +211,7 @@ public class ClientHandler extends Thread {
 							+ "=============================="
 					);
 					continue;	
+					
 				}
 				
 				message = message.trim();
