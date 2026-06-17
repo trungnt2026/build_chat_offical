@@ -120,13 +120,21 @@ public class Server {
 	
 	public static String getGroups() {
 		
-		String result = "Danh sach nhom:\n";
+		if (groupIds.isEmpty()) {
+			return "[He thong] Chua co nhom nao duoc tao";
+		}
+		
+		StringBuilder result = new StringBuilder();
+		result.append("Danh sach nhom:\n");
 		
 		for (Integer id : new TreeSet<>(groupIds.keySet())) {
-			
-			result += "[" + id + "] " + groupIds.get(id) + "\n";
+			result.append("[")
+				  .append(id)
+				  .append("] ")
+				  .append(groupIds.get(id))
+				  .append("\n");
 		}
-		return result;
+		return result.toString();
 	}
 	
 	public static void joinGroup(String groupName, ClientHandler client) {

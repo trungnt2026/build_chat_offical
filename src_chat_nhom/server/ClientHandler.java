@@ -129,8 +129,15 @@ public class ClientHandler extends Thread {
 					}
 					continue;
 				}
+				
+				if (message.equalsIgnoreCase("/groups")) {
 
-				if (message.startsWith("/group")) {
+					sendMessage(Server.getGroups());
+
+					continue;
+				}
+
+				if (message.startsWith("/group ")) {
 
 					String[] parts = message.split(" ", 3);
 
@@ -149,13 +156,6 @@ public class ClientHandler extends Thread {
 					} else {
 						sendMessage("Sai cu phap! Dung: /group id_nhom noi_dung");
 					}
-					continue;
-				}
-
-				if (message.equalsIgnoreCase("/groups")) {
-
-					sendMessage(Server.getGroups());
-
 					continue;
 				}
 				
@@ -181,12 +181,18 @@ public class ClientHandler extends Thread {
 							+ "'/rename ten_moi'\n"
 							+ "   -> Doi ten moi.\n\n"
 							
+							+ "'/online'\n"
+							+ "   -> Xem danh sach online.\n\n"
+							
 							+ "/pm ten_nguoi_nhan noi_dung\n"
 							+ "   -> Gui tin nhan rieng.\n\n"
 									
 							+ "/creategroup ten_nhom\n"
 							+ "   -> Tao nhom chat moi.\n\n"
 							
+							+ "/join ten_nhom\n"
+							+ "   -> Tham gia nhom chat moi.\n\n"
+
                             + "'/groups'\n"
                             + "   -> Xem danh sach nhom.\n\n"
                             
