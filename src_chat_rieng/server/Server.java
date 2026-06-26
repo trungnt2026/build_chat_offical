@@ -77,4 +77,13 @@ public class Server {
 		}
 	}
 	
+	public static void broadcast(String message, ClientHandler sender) {
+
+    for (ClientHandler client : clients) {
+        if (client != sender) {
+            client.output.println(message);
+        }
+    }
+}
+
 }

@@ -30,14 +30,18 @@ public class Client {
 			String name = scanner.nextLine();
 			output.println(name);
 			
-			//Thread nhan tin tu Server
+			//Thread nhận từ Server
 			Thread receiveThread = new Thread (() -> {
 				try {
 					String serverMessage;
 					
 					while ((serverMessage = input.readLine()) != null) {
+
+						System.out.println(serverMessage);
+
 						if (serverMessage.equalsIgnoreCase("/exit")) {
-							System.out.println("Server da thoat");
+							System.out.println("Da ngat ket noi toi server");
+							socket.close();
 							break;
 						}
 						
@@ -47,37 +51,23 @@ public class Client {
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-					
-					);
+			});
 			
 			//Thread gui tin cho Server
 			Thread sendThread = new Thread(() -> {
 				try {
 					while (true) {
 						String clientMessage = scanner.nextLine();
-						
-						output.println(clientMessage);
-						
-						if (clientMessage.equalsIgnoreCase("/exit")) {
-							System.out.println(name + " da thoat");
-							break;
-						}
-						
+						output.println(clientMessage);	
 					}
 					
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-			}
-					
-					);
-			
+			});
 			
 			receiveThread.start();
 			sendThread.start();
-			
 			
 		}catch (Exception e) {
 			e.printStackTrace();

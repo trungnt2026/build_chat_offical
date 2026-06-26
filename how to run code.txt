@@ -6,23 +6,4 @@ chat_chung: Desktop\build_chat_TVU\build_Chat\src_chat_chung
 
 chat_nhom: Desktop\build_chat_TVU\build_Chat\src_chat_nhom
 
-Bước 1: khởi động .server
-cd Desktop\build_chat_TVU\build_chat\Chat\src
-
-javac server\Server.java server\ClientHandler.java hoặc javac server\*.java
-
-sau đó
-
-java server.Server
-
-Bước 2: Chạy client 1
-
-cd Desktop\build_chat_TVU\build_chat\Chat\src
-
-java client.Client
-
-Bước 3: chạy Client 2 -> n tương tự bước 2 (thường mở 3 client là đủ để xem tính năng)
-
-cd Desktop\build_chat_TVU\build_chat\Chat\src
-
-java client.Client
+mở file run.bat rồi tiến hành test

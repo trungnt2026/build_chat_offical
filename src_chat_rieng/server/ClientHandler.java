@@ -38,6 +38,8 @@ public class ClientHandler extends Thread {
 			while ((message = input.readLine()) != null) {
 				
 				if (message.equalsIgnoreCase("/exit")) {
+					sendMessage("Ban da offline");
+
 					System.out.println(name + " da thoat");
 					break;
 				}
@@ -105,5 +107,6 @@ public class ClientHandler extends Thread {
 	public String getClientName() {
 		return name;
 	}
+
 	
 }
